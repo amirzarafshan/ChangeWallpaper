@@ -12,7 +12,7 @@ namespace ChainManager_UI_Testing
     public class AccountTabSession
     {
 
-        private const string buildNumber = "22.8.3.1282";
+        private const string buildNumber = "22.8.16.1284";
         private const string user = "Amir1";
 
         private const string mainPath = @"C:\Program Files (x86)\PCM\";

@@ -126,6 +126,14 @@ namespace AccountTabTest.Models
             LocateChainManagerElement(Properties.Location_Item_in_Search_Filter_box).Click();
         }
 
+        public static void SelectStationFromSearchBox()
+        {
+            WindowsElement SearchOptionsCombobox = LocateChainManagerElement(Properties.Search_Options_Filter_box);
+            SearchOptionsCombobox.Click();
+            //SearchOptionsCombobox.SendKeys(Keys.Up); 
+            LocateChainManagerElement(Properties.Station_Item_in_Search_Filter_box).Click();
+        }
+
         public static AppiumOptions CanDesktopDesiredCapabilities()
         {
             AppiumOptions canDesktop = new AppiumOptions();

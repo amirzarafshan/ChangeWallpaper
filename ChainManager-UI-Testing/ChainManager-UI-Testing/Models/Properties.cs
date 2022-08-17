@@ -69,6 +69,7 @@ namespace AccountTabTest.Models
         public static readonly string Station_Allow_OMC_Item = "Allow OMC";
         public static readonly string Station_Allow_Audio_Content_Item = "Allow Audio Content";
         public static readonly string Station_Allow_Video_Content_Item = "Allow Video Content";
+        public static readonly string Station_Allow_Remote_Notifications_Item = "Allow Remote Notifications";
         public static readonly string Station_Preserve_Main_Content_Item = "Preserve Main Content";
         public static readonly string Station_Hi_Res_Video_Item = "Hi Res Video";
         public static readonly string Station_Hi_Res_Album_Art_Item = "Hi Res Album Art";

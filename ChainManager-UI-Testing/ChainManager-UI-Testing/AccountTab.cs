@@ -126,10 +126,7 @@ namespace AccountTabTest
 
             Locators.LocateChainManagerElement(Properties.StationsAndSchedules_File_New_Item).Click();
 
-            // create new account
-            //WindowsElement accountMenuItem = session.FindElementByAccessibilityId("AccountMenuItem");
-            //accountMenuItem.Click();
-            //WindowsElement newAccountForm = session.FindElementByName("New Account");
+            // Create new account
             Locators.LocateChainManagerElement(Properties.StationsAndSchedules_File_New_Account_Item).Click();
 
             Locators.SwitchToCurrentForm();
@@ -291,7 +288,18 @@ namespace AccountTabTest
             Locators.LocateButton(Properties.Save_Button).Click();
 
             Locators.SwitchToCurrentForm();
+            
+            Locators.SelectLocationFromSearchBox();
+
+            WindowsElement SearchBox = Locators.LocateChainManagerElement(Properties.Search_Box);
+            SearchBox.Clear();
+            SearchBox.Click();
+            SearchBox.SendKeys(Properties.Location_Name_Value);
+
+            // Press view button
+            Locators.LocateButton(Properties.View_Button).Click();
             Locators.WaitElementToShowUp(Properties.Location_Name_Value);
+
             Assert.IsTrue(IsCMElementExist(Properties.Location_Item_in_Search_Filter_box, Properties.Location_Name_Value));
 
         }
@@ -318,6 +326,93 @@ namespace AccountTabTest
 
         }
 
+        [TestMethod]
+        public void TC09_CreateStationTest()
+        {
+
+            if (!IsCMElementExist(Properties.Station_Item_in_Search_Filter_box, Properties.Station_Name_Value))
+            {
+                // uncheck auto filter checkbox
+                if (session.FindElementByClassName(Properties.Filter_CheckBox).Enabled)
+                    session.FindElementByClassName(Properties.Filter_CheckBox).Click();
+
+                // Check whether locaiton exist first, if not create it 
+                if (!IsCMElementExist(Properties.Location_Item_in_Search_Filter_box, Properties.Location_Name_Value))
+                {
+                    TC07_CreateLocationTest();
+                }
+
+                Locators.GotoElemnetContextMenu(Locators.LocateChainManagerElement(Properties.Location_Name_Value));
+                Thread.Sleep(TimeSpan.FromSeconds(1));
+                Locators.WaitElementToShowUpContextMenu(Properties.New_Station_Form);
+                Locators.LocateChainManagerElementContextMenu(Properties.New_Station_Form).Click();
+
+                Locators.SwitchToCurrentForm();
+                //Locators.LocateChainManagerElement(Properties.Cancel_Button).Click();
+                Assert.IsTrue(Locators.LocateChainManagerElement(Properties.Station_UI_Main).Selected);
+                Assert.IsFalse(Locators.LocateChainManagerElement(Properties.Station_UI_Jukebox).Selected);
+                Assert.IsTrue(Locators.LocateChainManagerElement(Properties.Station_Active_Item).Selected);
+                Assert.IsTrue(Locators.LocateChainManagerElement(Properties.Station_Allow_Download_Item).Selected);
+                Assert.IsFalse(Locators.LocateChainManagerElement(Properties.Station_Hi_Res_Album_Art_Item).Selected);
+                Assert.IsFalse(Locators.LocateChainManagerElement(Properties.Station_Hi_Res_Video_Item).Selected);
+                Assert.IsFalse(Locators.LocateChainManagerElement(Properties.Station_Live_Content_Item).Selected);
+                Assert.IsFalse(Locators.LocateChainManagerElement(Properties.Station_Explicit_Content_Item).Selected);
+                Assert.IsFalse(Locators.LocateChainManagerElement(Properties.Station_Coin_Operated_Item).Enabled);
+                Assert.IsFalse(Locators.LocateChainManagerElement(Properties.Station_Preserve_Main_Content_Item).Selected);
+                Assert.IsFalse(Locators.LocateChainManagerElement(Properties.Station_Update_CD_Item).Selected);
+                Assert.IsTrue(Locators.LocateChainManagerElement(Properties.Station_Billable_Item).Selected);
+                Assert.IsTrue(Locators.LocateChainManagerElement(Properties.Station_Allow_Mobile_Access_Item).Selected);
+                Assert.IsFalse(Locators.LocateChainManagerElement(Properties.Station_Allow_Video_Content_Item).Selected);
+                Assert.IsTrue(Locators.LocateChainManagerElement(Properties.Station_Allow_Audio_Content_Item).Selected);
+                Assert.IsTrue(Locators.LocateChainManagerElement(Properties.Station_Allow_Remote_Notifications_Item).Selected);
+
+                WindowsElement StationName = Locators.LocateChainManagerElement("NameTextBox");
+                StationName.Click();
+                StationName.SendKeys(Properties.Station_Name_Value);
+
+                WindowsElement GeneratePassword = Locators.LocateButton("Generate");
+                GeneratePassword.Click();
+                GeneratePassword.SendKeys(Keys.Tab + Keys.Enter);
+                //session.FindElementByClassName("Button").Click();
+
+                Locators.SwitchToCurrentForm();
+                WindowsElement Country = Locators.LocateChainManagerElement(Properties.Station_Country_Search_box);
+                Country.Click();
+                Country.SendKeys("Canada" + Keys.Enter);
+                Locators.WaitElementToShowUp("Canada");
+                Locators.LocateChainManagerElement("Canada").Click();
+
+                Locators.LocateButton(Properties.Save_Button).Click();
+                
+                // return to station settings form
+                Locators.SwitchToCurrentForm();
+
+                Locators.LocateButton(Properties.Save_Button).Click();
+
+                // return to stations & schedules form
+                Locators.SwitchToCurrentForm();
+
+                Locators.SwitchToCurrentForm();
+                WindowsElement SearchOptionsCombobox = Locators.LocateChainManagerElement(Properties.Search_Options_Filter_box);
+                SearchOptionsCombobox.Click();
+                SearchOptionsCombobox.SendKeys(Keys.Down); 
+                Locators.LocateChainManagerElement(Properties.Station_Item_in_Search_Filter_box).Click();
+
+
+                WindowsElement SearchBox = Locators.LocateChainManagerElement(Properties.Search_Box);
+                SearchBox.Click();
+                SearchBox.Clear();
+                SearchBox.SendKeys(Properties.Station_Name_Value);
+
+                // Press view button
+                Locators.LocateButton(Properties.View_Button).Click();
+                Locators.WaitElementToShowUp(Properties.Station_Name_Value);
+                Assert.AreEqual(Locators.LocateChainManagerElement(Properties.Station_Name_Value).Text, SearchBox.Text);
+
+            }
+        }
+
+
         private static bool IsAccountExist()
         {
             try
@@ -330,8 +425,6 @@ namespace AccountTabTest
                 try
                 {
                     Locators.SelectAccountFromSearchBox();
-
-                    // Ignore to check auto filter checkbox
 
                     // Enter account name in searchbox
                     WindowsElement SearchBox = Locators.LocateChainManagerElement(Properties.Search_Box);
@@ -379,8 +472,16 @@ namespace AccountTabTest
                         Locators.LocateButton(Properties.View_Button).Click();
                         Assert.IsTrue(Locators.LocateChainManagerElement(Properties.Account_Name_Value).Displayed);
                     }
+
                     else if (elementInFilterbox.Equals(Properties.Location_Item_in_Search_Filter_box))
                     {
+
+                        // check auto filter checkbox
+                        if (session.FindElementByClassName(Properties.Filter_CheckBox).Enabled) 
+                        {
+                            session.FindElementByClassName(Properties.Filter_CheckBox).Click();
+                        }
+        
                         // Enter location name in searchbox
                         Locators.SelectLocationFromSearchBox();
                         SearchBox.Click();
@@ -389,6 +490,20 @@ namespace AccountTabTest
                         // Press view button
                         Locators.LocateButton(Properties.View_Button).Click();
                         Assert.IsTrue(Locators.LocateChainManagerElement(Properties.Location_Name_Value).Displayed);
+                    }
+
+                    else if (elementInFilterbox.Equals(Properties.Station_Item_in_Search_Filter_box))
+                    {
+                        // Enter station name in searchbox
+                        Locators.SelectStationFromSearchBox();
+                        SearchBox.Click();
+                        session.FindElementByClassName(Properties.Filter_CheckBox).Click();
+                        //Locators.LocateChainManagerElement(Properties.Filter_CheckBox).Click();
+                        SearchBox.SendKeys(Properties.Station_Name_Value);
+
+                        // Press view button
+                        Locators.LocateButton(Properties.View_Button).Click();
+                        Assert.IsTrue(Locators.LocateChainManagerElement(Properties.Station_Name_Value).Displayed);
                     }
 
                     // Ignore to check auto filter checkbox
